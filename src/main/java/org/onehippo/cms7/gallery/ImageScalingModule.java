@@ -77,6 +77,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
                 } catch (RepositoryException e) {
                     log.error("", e);
                     refresh();
+                    throw e;
                 } finally {
                     IOUtils.closeQuietly(stream);
                 }
