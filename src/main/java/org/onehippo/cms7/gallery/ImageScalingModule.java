@@ -100,12 +100,12 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
                     return;
                 } catch (final ExecutionException e) {
                     Throwable cause = e.getCause();
-                    final boolean triedEnough = i == maxRetry - 1;
                     /*
                      * In case of PathNotFoundException (original might not be there yet)
                      * we want to retry to create image at later time
                      */
-                    if (!(cause instanceof PathNotFoundException) || triedEnough) {
+                    final boolean lastRetry = i == (maxRetry - 1);
+                    if (lastRetry || !(cause instanceof PathNotFoundException)) {
                         executor.shutdownNow();
                         return;
                     }
@@ -116,7 +116,10 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
             }
         } finally {
-            executor.shutdownNow();
+            if (!executor.isShutdown()) {
+                executor.shutdownNow();
+            }
+
         }
     }
 
