@@ -21,4 +21,18 @@
   <sv:property sv:name="hipposys:className" sv:type="String">
     <sv:value>org.onehippo.cms7.gallery.ImageScalingModule</sv:value>
   </sv:property>
+  <sv:property sv:name="hipposys:cmsonly" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:node sv:name="hippo:moduleconfig">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="maxRetry" sv:type="Long">
+      <sv:value>5</sv:value>
+    </sv:property>
+    <sv:property sv:name="delay" sv:type="Long">
+      <sv:value>1000</sv:value>
+    </sv:property>
+  </sv:node>
 </sv:node>

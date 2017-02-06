@@ -19,10 +19,7 @@ package org.onehippo.cms7.gallery;
 import org.apache.wicket.util.io.IOUtils;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ImageUtils;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ScalingParameters;
-import org.hippoecm.frontend.plugins.gallery.model.GalleryProcessor;
 import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessor;
-import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessorPlugin;
-import org.hippoecm.frontend.plugins.gallery.processor.event.ImageVariantEvent;
 import org.hippoecm.repository.gallery.HippoGalleryNodeType;
 import org.hippoecm.repository.util.JcrUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
@@ -39,7 +36,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessorPlugin.*;
+import static org.onehippo.cms7.gallery.BackgroundScalingGalleryProcessorPlugin.*;
 
 public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
@@ -167,21 +164,19 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     protected ScalingGalleryProcessor createScalingGalleryProcessor() throws RepositoryException {
         final Node config = session.getNode("/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService");
-        final ScalingGalleryProcessor processor = new ScalingGalleryProcessor();
-        final boolean backgroundProcessing = JcrUtils.getBooleanProperty(config, GalleryProcessor.GALLERY_BACKGROUND_PROCESSING, false);
-        processor.setBackgroundProcessing(backgroundProcessing);
-        log.debug("Using background processing: {}", backgroundProcessing);
+        final BackgroundScalingGalleryProcessor processor = new BackgroundScalingGalleryProcessor();
+
         final NodeIterator nodes = config.getNodes();
         while (nodes.hasNext()) {
             final Node scaleConfig = nodes.nextNode();
 
             final String nodeName = scaleConfig.getName();
-            final int width = getAsInteger(scaleConfig, ScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH, DEFAULT_WIDTH);
+            final int width = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH, DEFAULT_WIDTH);
             final int height = getAsInteger(scaleConfig, CONFIG_PARAM_HEIGHT, DEFAULT_HEIGHT);
             final boolean upscaling = JcrUtils.getBooleanProperty(scaleConfig, CONFIG_PARAM_UPSCALING, DEFAULT_UPSCALING);
             final float compressionQuality = (float) getAsDouble(scaleConfig, CONFIG_PARAM_COMPRESSION, DEFAULT_COMPRESSION);
             final String strategyName = JcrUtils.getStringProperty(scaleConfig, CONFIG_PARAM_OPTIMIZE, DEFAULT_OPTIMIZE);
-            final Map<String, ImageUtils.ScalingStrategy> SCALING_STRATEGY_MAP = getScalingStrategyMap();
+            final Map<String, ImageUtils.ScalingStrategy> SCALING_STRATEGY_MAP = BackgroundScalingGalleryProcessorPlugin.getScalingStrategyMap();
             ImageUtils.ScalingStrategy strategy = SCALING_STRATEGY_MAP.get(strategyName);
             if (strategy == null) {
                 log.warn("Image variant '{}' specifies an unknown scaling optimization strategy '{}'. Possible values are {}. Falling back to '{}' instead.",

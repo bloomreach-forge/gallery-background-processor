@@ -16,25 +16,23 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.onehippo.cms7</groupId>
-    <artifactId>hippo-cms</artifactId>
-    <version>4.1.1-SNAPSHOT</version>
+    <artifactId>hippo-cms7-release</artifactId>
+    <version>11.1.0</version>
   </parent>
   <name>CMS Gallery background module</name>
   <artifactId>hippo-cms-gallery-background-module</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-
   <properties>
-    <cms.version>4.1.1-SNAPSHOT</cms.version>
+    <junit.version>4.12</junit.version>
+    <commons-io.version>2.2</commons-io.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-api</artifactId>
-      <version>${cms.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -50,16 +48,35 @@
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-gallery-frontend</artifactId>
-      <version>${cms.version}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-cms-editor-frontend</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+      <version>${junit.version}</version>
     </dependency>
 
+
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>hippo</id>
+      <name>Hippo maven 2 repository.</name>
+      <url>https://maven.onehippo.com/maven2/</url>
+    </repository>
+  </repositories>
 
 </project>
 
