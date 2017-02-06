@@ -7,8 +7,8 @@ Add following dependency to *cms/pom.xml*
  </dependency>
 ```
 
-To enable background processing, add new boolean (true) property
-``gallery.processor.backgroundProcessing`` to
+To enable background processing change:
+``plugin.clas`` property to: ``org.onehippo.cms7.gallery.BackgroundScalingGalleryProcessorPlugin``
  [http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService](http://localhost:8080/cms/console/?1&path=/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService)
 
 If needed change: 
