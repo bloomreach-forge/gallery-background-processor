@@ -1,4 +1,20 @@
-package org.onehippo.cms7.gallery;
+/*
+ * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.onehippo.labs.gallery;
 
 import org.apache.commons.lang.StringUtils;
 import org.hippoecm.frontend.plugin.IPluginContext;
@@ -13,20 +29,24 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * ScalingGalleryProcessorPlugin  that creates a BackgroundScalingGalleryProcessor
+ */
 public class BackgroundScalingGalleryProcessorPlugin extends ScalingGalleryProcessorPlugin {
 
     private static final Logger log = LoggerFactory.getLogger(BackgroundScalingGalleryProcessorPlugin.class);
-    public static final String CONFIG_PARAM_WIDTH = "width";
-    public static final String CONFIG_PARAM_HEIGHT = "height";
-    public static final String CONFIG_PARAM_UPSCALING = "upscaling";
-    public static final String CONFIG_PARAM_OPTIMIZE = "optimize";
-    public static final String CONFIG_PARAM_COMPRESSION = "compression";
 
-    public static final int DEFAULT_WIDTH = 0;
-    public static final int DEFAULT_HEIGHT = 0;
-    public static final boolean DEFAULT_UPSCALING = false;
-    public static final String DEFAULT_OPTIMIZE = "quality";
-    public static final double DEFAULT_COMPRESSION = 1.0;
+    static final String CONFIG_PARAM_WIDTH = "width";
+    static final String CONFIG_PARAM_HEIGHT = "height";
+    static final String CONFIG_PARAM_UPSCALING = "upscaling";
+    static final String CONFIG_PARAM_OPTIMIZE = "optimize";
+    static final String CONFIG_PARAM_COMPRESSION = "compression";
+
+    static final int DEFAULT_WIDTH = 0;
+    static final int DEFAULT_HEIGHT = 0;
+    static final boolean DEFAULT_UPSCALING = false;
+    static final String DEFAULT_OPTIMIZE = "quality";
+    static final double DEFAULT_COMPRESSION = 1.0;
 
     private static final Map<String, ImageUtils.ScalingStrategy> SCALING_STRATEGY_MAP = new LinkedHashMap<>();
 
@@ -72,7 +92,7 @@ public class BackgroundScalingGalleryProcessorPlugin extends ScalingGalleryProce
         return processor;
     }
 
-    public static Map<String, ImageUtils.ScalingStrategy> getScalingStrategyMap() {
+    static Map<String, ImageUtils.ScalingStrategy> getScalingStrategyMap() {
         return SCALING_STRATEGY_MAP;
     }
 }

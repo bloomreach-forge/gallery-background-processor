@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.cms7.gallery;
+package org.onehippo.labs.gallery;
 
 import org.apache.wicket.util.io.IOUtils;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ImageUtils;
@@ -30,13 +30,23 @@ import org.onehippo.repository.util.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.*;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Map;
-import java.util.concurrent.*;
 
-import static org.onehippo.cms7.gallery.BackgroundScalingGalleryProcessorPlugin.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static org.onehippo.labs.gallery.BackgroundScalingGalleryProcessorPlugin.*;
 
 public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
@@ -45,6 +55,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
     private static final long MAX_DELAY = Long.MAX_VALUE;
     private static final int DEFAULT_MAX_RETRY = 5;
     private static final int DEFAULT_DELAY = 1000;
+    public static final String GALLERY_PROCESSOR_SERVICE_PATH = "/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService";
     private Session session;
     private ScalingGalleryProcessor scalingProcessor;
     private int maxRetry = DEFAULT_MAX_RETRY;
@@ -72,7 +83,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
                     log.debug("Image variant not found, will retry again");
                     throw e;
                 } catch (RepositoryException e) {
-                    log.error("", e);
+                    log.error(e.getClass().getName() + " during creation of variant " + event.variant(), e);
                     refresh();
                     throw e;
                 } finally {
@@ -86,7 +97,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     }
 
-    public void retry(final Callable<Void> command) throws Exception {
+    private void retry(final Callable<Void> command) throws Exception {
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         try {
             long delay = minDelay;
@@ -126,7 +137,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
      * @param attempt current attempt
      * @return exponential backoff in milliseconds
      */
-    public long backoff(int attempt) {
+    long backoff(int attempt) {
         long duration = minDelay * (long) Math.pow(2, attempt);
         if (duration < 0) {
             duration = MAX_DELAY;
@@ -162,9 +173,15 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
         HippoServiceRegistry.unregisterService(this, HippoEventBus.class);
     }
 
-    protected ScalingGalleryProcessor createScalingGalleryProcessor() throws RepositoryException {
-        final Node config = session.getNode("/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService");
+    private ScalingGalleryProcessor createScalingGalleryProcessor() throws RepositoryException {
+
         final BackgroundScalingGalleryProcessor processor = new BackgroundScalingGalleryProcessor();
+
+        if (!session.nodeExists(GALLERY_PROCESSOR_SERVICE_PATH)) {
+            log.error("Cannot access default gallery processor path at {}, skipping reading the parameters",GALLERY_PROCESSOR_SERVICE_PATH);
+            return processor;
+        }
+        final Node config = session.getNode(GALLERY_PROCESSOR_SERVICE_PATH);
 
         final NodeIterator nodes = config.getNodes();
         while (nodes.hasNext()) {

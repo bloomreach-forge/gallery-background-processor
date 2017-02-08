@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.onehippo.cms7.gallery;
+package org.onehippo.labs.gallery;
 
 import org.junit.Test;
 import org.slf4j.Logger;
