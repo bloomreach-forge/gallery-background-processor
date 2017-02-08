@@ -52,10 +52,12 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     private static final Logger log = LoggerFactory.getLogger(ImageScalingModule.class);
 
+    private static final String GALLERY_PROCESSOR_SERVICE_PATH = "/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService";
+
     private static final long MAX_DELAY = Long.MAX_VALUE;
     private static final int DEFAULT_MAX_RETRY = 5;
     private static final int DEFAULT_DELAY = 1000;
-    public static final String GALLERY_PROCESSOR_SERVICE_PATH = "/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService";
+
     private Session session;
     private ScalingGalleryProcessor scalingProcessor;
     private int maxRetry = DEFAULT_MAX_RETRY;
@@ -156,7 +158,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void doConfigure(final Node node) throws RepositoryException {
-        log.debug("Reconfiguring BackgroundScalingModule: {}");
+        log.debug("Reconfiguring {}", this.getClass().getName());
         maxRetry = getAsInteger(node, "maxRetry", DEFAULT_MAX_RETRY);
         minDelay = getAsInteger(node, "delay", DEFAULT_DELAY);
     }
