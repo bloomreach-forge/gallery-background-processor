@@ -80,6 +80,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
                     final Node imageRoot = session.getNode(event.nodePath());
                     final Node original = imageRoot.getNode(HippoGalleryNodeType.IMAGE_SET_ORIGINAL);
 
+                    @SuppressWarnings("unchecked")
                     final Map<String, String> variantNamesToTypes = event.variants();
 
                     for (final String name : variantNamesToTypes.keySet()) {
