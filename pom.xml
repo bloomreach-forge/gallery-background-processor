@@ -22,9 +22,9 @@
     <version>11.1.0</version>
   </parent>
 
-  <name>CMS Gallery background module</name>
+  <name>CMS Gallery Background Module</name>
+  <groupId>org.onehippo.forge</groupId>
   <artifactId>hippo-cms-gallery-background-module</artifactId>
-  <groupId>org.onehippo.labs</groupId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 

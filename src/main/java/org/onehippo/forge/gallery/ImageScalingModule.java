@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.labs.gallery;
+package org.onehippo.forge.gallery;
 
 import org.apache.wicket.util.io.IOUtils;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ImageUtils;
@@ -46,7 +46,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static org.onehippo.labs.gallery.BackgroundScalingGalleryProcessorPlugin.*;
+import static org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin.*;
 
 public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 

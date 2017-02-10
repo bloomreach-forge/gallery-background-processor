@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.labs.gallery;
+package org.onehippo.forge.gallery;
 
 import org.onehippo.cms7.event.HippoEvent;
 

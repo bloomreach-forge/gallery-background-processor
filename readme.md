@@ -11,7 +11,7 @@ posts an event to a repository module, which will create the other variants in t
 Add following dependency to *cms/pom.xml* 
 ``` 
 <dependency>
-    <groupId>org.onehippo.labs</groupId>
+    <groupId>org.onehippo.forge</groupId>
     <artifactId>hippo-cms-gallery-background-module</artifactId>
     <version>1.0.0-SNAPSHOT</version>
  </dependency>
@@ -20,7 +20,7 @@ Add following dependency to *cms/pom.xml*
 To enable background processing:
 
 At node ``/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService``
-- set ``plugin.class=org.onehippo.labs.gallery.BackgroundScalingGalleryProcessorPlugin``
+- set ``plugin.class=org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin``
 
 
 If needed change the module configuration: 

@@ -19,7 +19,7 @@
     <sv:value>hippo:initializefolder</sv:value>
   </sv:property>
 
-  <sv:node sv:name="hippo-labs-image-scaling-module">
+  <sv:node sv:name="hippo-forge-image-scaling-module">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>hippo:initializeitem</sv:value>
     </sv:property>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.labs.gallery;
+package org.onehippo.forge.gallery;
 
 import org.apache.commons.io.IOUtils;
 import org.hippoecm.editor.type.PlainJcrTypeStore;

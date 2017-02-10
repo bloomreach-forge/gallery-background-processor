@@ -19,7 +19,7 @@
     <sv:value>hipposys:module</sv:value>
   </sv:property>
   <sv:property sv:name="hipposys:className" sv:type="String">
-    <sv:value>org.onehippo.labs.gallery.ImageScalingModule</sv:value>
+    <sv:value>org.onehippo.forge.gallery.ImageScalingModule</sv:value>
   </sv:property>
   <sv:property sv:name="hipposys:cmsonly" sv:type="Boolean">
     <sv:value>true</sv:value>
