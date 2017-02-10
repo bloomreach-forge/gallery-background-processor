@@ -16,49 +16,45 @@
 
 package org.onehippo.forge.gallery;
 
+import java.util.Map;
+
 import org.onehippo.cms7.event.HippoEvent;
 
 public class ImageVariantEvent<T extends ImageVariantEvent<T>> extends HippoEvent<T> {
 
-    private static final String VARIANT = "variant";
-    private static final String NODE = "node";
+    private static final String VARIANTS = "variants";
+    private static final String NODE_PATH = "nodePath";
     private static final String GALLERY = "gallery";
     private static final String MIME_TYPE = "mimeType";
     private static final String FILE_NAME = "fileName";
-    private static final String TYPE = "type";
 
     public ImageVariantEvent(String application) {
         super(application);
         category(GALLERY);
     }
 
-    public ImageVariantEvent(HippoEvent<?> event) {
-        super(event);
+    /**
+     * Set a mapping from variant name to JCR type.
+     */
+    public T variants(final Map<String, String> variants) {
+        return put(VARIANTS, variants);
     }
 
-    public T variant(final String variant) {
-        return put(VARIANT, variant);
+    /**
+     * Get a mapping from variant name to JCR type.
+     */
+    public Map<String, String> variants() {
+        return get(VARIANTS);
     }
 
-    public String variant() {
-        return get(VARIANT);
+    public T nodePath(final String node) {
+        return put(NODE_PATH, node);
     }
 
-    public T node(final String node) {
-        return put(NODE, node);
+    public String nodePath() {
+        return get(NODE_PATH);
     }
 
-    public String node() {
-        return get(NODE);
-    }
-
-    public T type(final String type) {
-        return put(TYPE, type);
-    }
-
-    public String type() {
-        return get(TYPE);
-    }
 
     public T mimeType(final String mimeType) {
         return put(MIME_TYPE, mimeType);

@@ -37,8 +37,10 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Map;
 
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -65,27 +67,36 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     @Subscribe
     public void handleEvent(ImageVariantEvent event) {
-        log.debug("Processing variant: {}", event.variant());
+        log.debug("Received ImageVariantEvent for nodePath {} with variants: {}", event.nodePath(), event.variants());
 
         try {
             retry(() -> {
                 InputStream stream = null;
                 try {
-                    final Node root = session.getNode(event.node());
-                    final Node original = root.getNode(HippoGalleryNodeType.IMAGE_SET_ORIGINAL);
-                    final Node variantNode = root.addNode(event.variant(), event.type());
-                    stream = original.getProperty(JcrConstants.JCR_DATA).getBinary().getStream();
                     if (scalingProcessor == null) {
                         scalingProcessor = createScalingGalleryProcessor();
                     }
-                    scalingProcessor.initGalleryResource(variantNode, stream, event.mimeType(), event.fileName(), Calendar.getInstance());
+
+                    final Node imageRoot = session.getNode(event.nodePath());
+                    final Node original = imageRoot.getNode(HippoGalleryNodeType.IMAGE_SET_ORIGINAL);
+
+                    final Map<String, String> variantNamesToTypes = event.variants();
+
+                    for (final String name : variantNamesToTypes.keySet()) {
+                        final String type = variantNamesToTypes.get(name);
+                        log.debug("--> creating image variant {} of type {}", name, type);
+
+                        final Node variantNode = imageRoot.addNode(name, type);
+                        stream = original.getProperty(JcrConstants.JCR_DATA).getBinary().getStream();
+                        scalingProcessor.initGalleryResource(variantNode, stream, event.mimeType(), event.fileName(), Calendar.getInstance());
+                    }
                     session.save();
 
                 } catch (final PathNotFoundException e) {
-                    log.debug("Image variant not found, will retry again");
+                    log.debug("Image root (or 'original' subnode) not found, will retry again");
                     throw e;
                 } catch (RepositoryException e) {
-                    log.error(e.getClass().getName() + " during creation of variant " + event.variant(), e);
+                    log.error(e.getClass().getName() + " during creation of variants for " + event.nodePath(), e);
                     refresh();
                     throw e;
                 } finally {

@@ -25,6 +25,7 @@ import org.hippoecm.frontend.plugins.gallery.imageutil.ImageBinary;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ScalingParameters;
 import org.hippoecm.frontend.plugins.gallery.model.GalleryException;
 import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessor;
+import org.hippoecm.frontend.session.UserSession;
 import org.hippoecm.frontend.types.IFieldDescriptor;
 import org.hippoecm.frontend.types.ITypeDescriptor;
 import org.hippoecm.repository.api.HippoNodeType;
@@ -65,7 +66,7 @@ public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
 
         Node resourceNode = getPrimaryChild(node);
         if (!resourceNode.isNodeType(HippoNodeType.NT_RESOURCE)) {
-            throw new GalleryException("Resource node not of primaryType " + HippoNodeType.NT_RESOURCE);
+            throw new GalleryException("Resource nodePath not of primaryType " + HippoNodeType.NT_RESOURCE);
         }
 
         //Create a new image binary that serves as the original source converted to RGB plus image metadata
@@ -88,15 +89,15 @@ public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
         try {
             type = store.load(node.getPrimaryNodeType().getName());
         } catch (StoreException e) {
-            throw new GalleryException("Could not load primary node type of " + node.getName() + ", cannot create imageset variants", e);
+            throw new GalleryException("Could not load primary nodePath type of " + node.getName() + ", cannot create imageset variants", e);
         }
 
-        //create the primary resource node
+        //create the primary resource nodePath
         log.debug("Creating primary resource {}", resourceNode.getPath());
         Calendar lastModified = resourceNode.getProperty(JcrConstants.JCR_LAST_MODIFIED).getDate();
         initGalleryResource(resourceNode, image.getStream(), image.getMimeType(), image.getFileName(), lastModified);
 
-        final Map<String, String> variants = new HashMap<>();
+        final Map<String, String> imageVariants = new HashMap<>();
         // create all resource variant nodes
         for (IFieldDescriptor field : type.getFields().values()) {
             if (field.getTypeDescriptor().isType(HippoGalleryNodeType.IMAGE)) {
@@ -104,34 +105,29 @@ public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
                 if (!node.hasNode(variantPath)) {
                     // #customization# create original and thumbnail directly, but keep the others to be posted as event
                     if (variantPath.equals(HippoGalleryNodeType.IMAGE_SET_ORIGINAL) || variantPath.equals(HippoGalleryNodeType.IMAGE_SET_THUMBNAIL)) {
-                        log.debug("creating variant resource {}", variantPath);
+                        log.debug("Creating variant {}", variantPath);
                         final Node variantNode = node.addNode(variantPath, field.getTypeDescriptor().getType());
                         initGalleryResource(variantNode, image.getStream(), image.getMimeType(), image.getFileName(), lastModified);
                     } else {
-                        log.debug("Scheduling variant for background processing: {}", variantPath);
-                        variants.put(variantPath, field.getTypeDescriptor().getType());
+                        log.debug("Scheduling variant {} for background processing", variantPath);
+                        imageVariants.put(variantPath, field.getTypeDescriptor().getType());
                     }
                 }
             }
         }
 
-        // #customization# post variant events to the event bus, for ImageScalingModule to pick up
+        // #customization# post the other variants o the event bus, for ImageScalingModule to pick up
         final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
         if (eventBus != null) {
-            for (Map.Entry<String, String> entry : variants.entrySet()) {
-                final String variant = entry.getKey();
-                final String variantType = entry.getValue();
-                final ImageVariantEvent variantEvent = new ImageVariantEvent(variant)
-                        .node(node.getPath())
-                        .type(variantType)
-                        .mimeType(image.getMimeType())
-                        .fileName(image.getFileName())
-                        .variant(variant);
-                variantEvent.sealEvent();
-                eventBus.post(variantEvent);
-            }
+            final ImageVariantEvent variantEvent = new ImageVariantEvent(UserSession.get().getApplicationName())
+                    .nodePath(node.getPath())
+                    .mimeType(image.getMimeType())
+                    .fileName(image.getFileName())
+                    .variants(imageVariants);
+            variantEvent.sealEvent();
+            eventBus.post(variantEvent);
         } else {
-            log.error("Cannot send image variant creation events because the event bus was not found. Primary resource is {}", resourceNode.getPath());
+            log.error("Hippo Event Bus not found: cannot send image variant creation event. Primary resource is {}", resourceNode.getPath());
         }
 
         image.dispose();
