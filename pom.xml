@@ -16,42 +16,76 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.onehippo.cms7</groupId>
-    <artifactId>hippo-cms7-release</artifactId>
-    <version>11.1.0</version>
+    <artifactId>hippo-cms7-project</artifactId>
+    <version>28.7</version>
   </parent>
 
-  <name>CMS Gallery Background Module</name>
-  <groupId>org.onehippo.forge</groupId>
-  <artifactId>hippo-cms-gallery-background-module</artifactId>
+  <name>Gallery Background Processing Module</name>
+  <groupId>org.onehippo.forge.gallery-background</groupId>
+  <artifactId>hippo-gallery-background-module</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
+  <inceptionYear>2017</inceptionYear>
 
   <properties>
+    <!-- from 11.2.3 release -->
+    <hippo.cms.version>4.2.5</hippo.cms.version>
+    <hippo.repository.version>4.2.2</hippo.repository.version>
+    <hippo.services.version>3.2.0</hippo.services.version>
+
     <junit.version>4.12</junit.version>
     <commons-io.version>2.2</commons-io.version>
+
+    <maven.plugin.site.version>3.6</maven.plugin.site.version>
+    <maven.doxia-module-markdown.version>1.7</maven.doxia-module-markdown.version>
   </properties>
+
+  <scm>
+    <connection>scm:git:git@github.com:onehippo-forge/gallery-background.git</connection>
+    <developerConnection>scm:git:git@github.com:onehippo-forge/gallery-background.git</developerConnection>
+    <url>https://github.com/onehippo-forge/gallery-background.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <name>Hippo Maven 2 Forge Repository</name>
+      <id>hippo-maven2-forge</id>
+      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+  </distributionManagement>
+
+  <issueManagement>
+    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
+  </issueManagement>
 
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-api</artifactId>
+      <version>${hippo.cms.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-api</artifactId>
+      <version>${hippo.repository.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-services</artifactId>
+      <version>${hippo.services.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-gallery-frontend</artifactId>
+      <version>${hippo.cms.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -63,6 +97,7 @@
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-editor-frontend</artifactId>
+      <version>${hippo.cms.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -70,7 +105,6 @@
       <scope>test</scope>
       <version>${junit.version}</version>
     </dependency>
-
 
   </dependencies>
 
@@ -80,7 +114,46 @@
       <name>Hippo maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2/</url>
     </repository>
+    <repository>
+      <id>hippo-forge</id>
+      <name>Hippo Forge maven 2 repository.</name>
+      <url>https://maven.onehippo.com/maven2-forge/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <layout>default</layout>
+    </repository>
   </repositories>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${maven.plugin.site.version}</version>
+        <configuration>
+          <outputDirectory>docs</outputDirectory>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-module-markdown</artifactId>
+            <version>${maven.doxia-module-markdown.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
 
