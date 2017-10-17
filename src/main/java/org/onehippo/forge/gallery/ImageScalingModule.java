@@ -37,10 +37,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Map;
 
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -159,7 +157,6 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
         return Math.min(Math.max(duration, minDelay), MAX_DELAY);
     }
 
-
     private void refresh() {
         try {
             session.refresh(false);
@@ -179,7 +176,6 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
     protected void doInitialize(final Session session) throws RepositoryException {
         this.session = session;
         HippoServiceRegistry.registerService(this, HippoEventBus.class);
-
     }
 
     @Override

@@ -24,16 +24,16 @@ import static org.junit.Assert.*;
 public class ImageScalingModuleTest {
 
     private static final Logger log = LoggerFactory.getLogger(ImageScalingModuleTest.class);
+
     @Test
     public void testBackoff() throws Exception {
         final ImageScalingModule imageScalingModule = new ImageScalingModule();
         long oldBackoff = 0;
         for (int i = 0; i < 50; i++) {
             long backoff = imageScalingModule.backoff(i);
-            log.info("backoff {} = {}",i, backoff);
+            log.info("backoff {} = {}", i, backoff);
             assertTrue(backoff > oldBackoff);
             oldBackoff = backoff;
         }
-
     }
 }

@@ -45,19 +45,16 @@ import java.util.Map;
 
 public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
 
-
     private static final Logger log = LoggerFactory.getLogger(BackgroundScalingGalleryProcessor.class);
-
 
     @Override
     public ScalingParameters addScalingParameters(final String nodeName, final ScalingParameters parameters) {
         return super.addScalingParameters(nodeName, parameters);
     }
 
-
     /**
      * Overridden from org.hippoecm.frontend.plugins.gallery.processor.AbstractGalleryProcessor
-     * See teh #customization# markers.
+     * See the #customization# markers.
      */
     @Override
     public void makeImage(Node node, InputStream stream, String mimeType, String fileName) throws GalleryException,
@@ -116,7 +113,7 @@ public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
             }
         }
 
-        // #customization# post the other variants o the event bus, for ImageScalingModule to pick up
+        // #customization# post the other variants to the event bus, for ImageScalingModule to pick up
         final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
         if (eventBus != null) {
             final ImageVariantEvent variantEvent = new ImageVariantEvent(UserSession.get().getApplicationName())
