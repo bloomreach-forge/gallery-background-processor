@@ -23,9 +23,9 @@
     <version>28.7</version>
   </parent>
 
-  <name>Gallery Background Processing Module</name>
+  <name>Gallery Background Processing Plugin</name>
   <groupId>org.onehippo.forge.gallery-background</groupId>
-  <artifactId>hippo-gallery-background-module</artifactId>
+  <artifactId>hippo-gallery-background-plugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <inceptionYear>2017</inceptionYear>
