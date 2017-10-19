@@ -48,7 +48,7 @@ Add this dependency to the `<dependencyManagement>` section of the root pom.xml:
 ```
 <dependency>
   <groupId>org.onehippo.forge.gallery-background</groupId>
-  <artifactId>hippo-gallery-background-module</artifactId>
+  <artifactId>hippo-gallery-background-plugin</artifactId>
   <version>${hippo.forge.gallery-background.version}</version>
 </dependency>
 ```
@@ -58,7 +58,7 @@ Add the following dependency to `cms/pom.xml`.
 ``` 
 <dependency>
   <groupId>org.onehippo.forge.gallery-background</groupId>
-  <artifactId>hippo-gallery-background-module</artifactId>
+  <artifactId>hippo-gallery-background-plugin</artifactId>
 </dependency>
 ```
 

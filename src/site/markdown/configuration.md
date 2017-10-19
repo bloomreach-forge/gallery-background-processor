@@ -16,12 +16,12 @@
 ## Configuration Options
 To enable background processing:
 
-At node ``/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService`` set:
+At the node ``/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService`` set:
 
 + ``plugin.class = org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin``
 
 
-If needed change the module configuration. At node ``/hippo:configuration/hippo:modules/image-scaling-module/hippo:moduleconfig`` set:
+If needed change the module configuration. At node ``/hippo:configuration/hippo:modules/gallery-background-module/hippo:moduleconfig`` set:
 
 + ``maxRetry`` (default 5): number of retries to recreate an variant in case original image was not available yet
 + ``delay`` (default 1000): initial delay in milliseconds, which is used to calculate retry, exponential backoff time

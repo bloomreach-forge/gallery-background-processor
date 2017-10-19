@@ -1,8 +1,8 @@
-## Gallery Background Processing Module
-The Gallery Background Processing Module will move the image variant creation process from inside the upload request to a 
-background process.
+## Gallery Background Processing Plugin
+The Gallery Background Processing Plugin will move the image variant creation process from inside the upload request to a 
+background process. This can be useful when an image set has many configured variants.
 
-It provides an alternative gallery processor class that only creates the original and thumbnail variants directly and 
+The plugin provides an alternative gallery processor class that only creates the original and thumbnail variants directly and 
 posts an event to a repository module, that will create the other variants in the background.   
 
 ## Code on GitHub
