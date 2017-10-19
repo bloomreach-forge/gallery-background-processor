@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<sv:node sv:name="gallery-background-module" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
+<sv:node sv:name="gallery-background" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>hipposys:module</sv:value>
   </sv:property>
