@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * ScalingGalleryProcessorPlugin that creates a BackgroundScalingGalleryProcessor.
+ * Plugin that creates a BackgroundScalingGalleryProcessor.
  */
 public class BackgroundScalingGalleryProcessorPlugin extends ScalingGalleryProcessorPlugin {
 

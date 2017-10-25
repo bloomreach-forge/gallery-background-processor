@@ -20,7 +20,10 @@ import java.util.Map;
 
 import org.onehippo.cms7.event.HippoEvent;
 
-public class ImageVariantEvent<T extends ImageVariantEvent<T>> extends HippoEvent<T> {
+/**
+ * Event for image creation (upload).
+ */
+public class ImageCreationEvent<T extends ImageCreationEvent<T>> extends HippoEvent<T> {
 
     private static final String VARIANTS = "variants";
     private static final String NODE_PATH = "nodePath";
@@ -28,7 +31,7 @@ public class ImageVariantEvent<T extends ImageVariantEvent<T>> extends HippoEven
     private static final String MIME_TYPE = "mimeType";
     private static final String FILE_NAME = "fileName";
 
-    public ImageVariantEvent(String application) {
+    public ImageCreationEvent(String application) {
         super(application);
         category(GALLERY);
     }

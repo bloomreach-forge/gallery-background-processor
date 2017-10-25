@@ -21,16 +21,16 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
-public class ImageScalingModuleTest {
+public class BackgroundGalleryProcessorModuleTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ImageScalingModuleTest.class);
+    private static final Logger log = LoggerFactory.getLogger(BackgroundGalleryProcessorModuleTest.class);
 
     @Test
     public void testBackoff() throws Exception {
-        final ImageScalingModule imageScalingModule = new ImageScalingModule();
+        final BackgroundGalleryProcessorModule backgroundGalleryProcessorModule = new BackgroundGalleryProcessorModule();
         long oldBackoff = 0;
         for (int i = 0; i < 50; i++) {
-            long backoff = imageScalingModule.backoff(i);
+            long backoff = backgroundGalleryProcessorModule.backoff(i);
             log.info("backoff {} = {}", i, backoff);
             assertTrue(backoff > oldBackoff);
             oldBackoff = backoff;

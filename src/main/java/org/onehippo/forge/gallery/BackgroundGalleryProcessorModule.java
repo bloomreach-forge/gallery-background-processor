@@ -48,9 +48,12 @@ import java.util.concurrent.TimeUnit;
 
 import static org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin.*;
 
-public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
+/**
+ * Daemon module that listens for image creation events and creates images variants from it.
+ */
+public class BackgroundGalleryProcessorModule extends AbstractReconfigurableDaemonModule {
 
-    private static final Logger log = LoggerFactory.getLogger(ImageScalingModule.class);
+    private static final Logger log = LoggerFactory.getLogger(BackgroundGalleryProcessorModule.class);
 
     private static final String GALLERY_PROCESSOR_SERVICE_PATH = "/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService";
 
@@ -61,11 +64,11 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
     private Session session;
     private ScalingGalleryProcessor scalingProcessor;
     private int maxRetry = DEFAULT_MAX_RETRY;
-    private int minDelay = DEFAULT_DELAY;
+    private int delay = DEFAULT_DELAY;
 
     @Subscribe
-    public void handleEvent(ImageVariantEvent event) {
-        log.debug("Received ImageVariantEvent for nodePath {} with variants: {}", event.nodePath(), event.variants());
+    public void handleEvent(ImageCreationEvent event) {
+        log.debug("Received ImageCreationEvent for nodePath {} with variants: {}", event.nodePath(), event.variants());
 
         try {
             retry(() -> {
@@ -109,10 +112,10 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     }
 
-    private void retry(final Callable<Void> command) throws Exception {
+    protected void retry(final Callable<Void> command) throws Exception {
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         try {
-            long delay = minDelay;
+            long delay = this.delay;
             for (int i = 0; i < maxRetry; i++) {
                 final ScheduledFuture<Void> future = executor.schedule(command, delay, TimeUnit.MILLISECONDS);
                 try {
@@ -149,15 +152,15 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
      * @param attempt current attempt
      * @return exponential backoff in milliseconds
      */
-    long backoff(int attempt) {
-        long duration = minDelay * (long) Math.pow(2, attempt);
+    protected long backoff(int attempt) {
+        long duration = delay * (long) Math.pow(2, attempt);
         if (duration < 0) {
             duration = MAX_DELAY;
         }
-        return Math.min(Math.max(duration, minDelay), MAX_DELAY);
+        return Math.min(Math.max(duration, delay), MAX_DELAY);
     }
 
-    private void refresh() {
+    protected void refresh() {
         try {
             session.refresh(false);
         } catch (RepositoryException e) {
@@ -167,9 +170,9 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
 
     @Override
     protected void doConfigure(final Node node) throws RepositoryException {
-        log.debug("Reconfiguring {}", this.getClass().getName());
         maxRetry = getAsInteger(node, "maxRetry", DEFAULT_MAX_RETRY);
-        minDelay = getAsInteger(node, "delay", DEFAULT_DELAY);
+        delay = getAsInteger(node, "delay", DEFAULT_DELAY);
+        log.debug("Reconfigured {}: maxRetry={}, delay={}", this.getClass().getName(), maxRetry, delay);
     }
 
     @Override
@@ -183,7 +186,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
         HippoServiceRegistry.unregisterService(this, HippoEventBus.class);
     }
 
-    private ScalingGalleryProcessor createScalingGalleryProcessor() throws RepositoryException {
+    protected ScalingGalleryProcessor createScalingGalleryProcessor() throws RepositoryException {
 
         final BackgroundScalingGalleryProcessor processor = new BackgroundScalingGalleryProcessor();
 
@@ -219,7 +222,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
         return processor;
     }
 
-    private double getAsDouble(final Node node, final String property, final double defaultValue) throws RepositoryException {
+    protected double getAsDouble(final Node node, final String property, final double defaultValue) throws RepositoryException {
         if (node.hasProperty(property)) {
 
             return node.getProperty(property).getDouble();
@@ -227,7 +230,7 @@ public class ImageScalingModule extends AbstractReconfigurableDaemonModule {
         return defaultValue;
     }
 
-    private int getAsInteger(final Node node, final String property, final int defaultValue) throws RepositoryException {
+    protected int getAsInteger(final Node node, final String property, final int defaultValue) throws RepositoryException {
         if (node.hasProperty(property)) {
 
             return (int) node.getProperty(property).getLong();

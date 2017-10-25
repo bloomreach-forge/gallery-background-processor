@@ -43,6 +43,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * BackgroundScalingGalleryProcessor that:
+ * - creates original and thumbnail directly within the upload
+ * - posts the other variants to the event bus, for BackgroundGalleryProcessorModule to pick up
+ */
 public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(BackgroundScalingGalleryProcessor.class);
@@ -113,10 +118,10 @@ public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
             }
         }
 
-        // #customization# post the other variants to the event bus, for ImageScalingModule to pick up
+        // #customization# post the other variants to the event bus, for BackgroundGalleryProcessorModule to pick up
         final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
         if (eventBus != null) {
-            final ImageVariantEvent variantEvent = new ImageVariantEvent(UserSession.get().getApplicationName())
+            final ImageCreationEvent variantEvent = new ImageCreationEvent(UserSession.get().getApplicationName())
                     .nodePath(node.getPath())
                     .mimeType(image.getMimeType())
                     .fileName(image.getFileName())

@@ -16,14 +16,14 @@
 
 ## Version Compatibility
 
-| Hippo CMS | Gallery Background |
-| --------- |--------------------| 
-| 11.2.3    | 1.0.x              |
+| Hippo CMS | Gallery Background Processor |
+| --------- |------------------------------| 
+| 11.2.3    | 1.0.x                        |
 
 ## Release Notes
 
 ### 1.0.0  
 
-<p class="smallinfo">Release date: 30 October 2017</p>
+<p class="smallinfo">Release date: d MMMM 2017</p>
 
 + Initial release

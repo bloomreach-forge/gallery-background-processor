@@ -23,9 +23,9 @@
     <version>28.7</version>
   </parent>
 
-  <name>Gallery Background Processing Plugin</name>
-  <groupId>org.onehippo.forge.gallery-background</groupId>
-  <artifactId>hippo-gallery-background-plugin</artifactId>
+  <name>Gallery Background Processor Plugin</name>
+  <groupId>org.onehippo.forge.gallery-background-processor</groupId>
+  <artifactId>gallery-background-processor</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <inceptionYear>2017</inceptionYear>
@@ -44,9 +44,9 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:onehippo-forge/gallery-background.git</connection>
-    <developerConnection>scm:git:git@github.com:onehippo-forge/gallery-background.git</developerConnection>
-    <url>https://github.com/onehippo-forge/gallery-background.git</url>
+    <connection>scm:git:git@github.com:onehippo-forge/gallery-background-processor.git</connection>
+    <developerConnection>scm:git:git@github.com:onehippo-forge/gallery-background-processor.git</developerConnection>
+    <url>https://github.com/onehippo-forge/gallery-background-processor.git</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -98,6 +98,7 @@
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-cms-editor-frontend</artifactId>
       <version>${hippo.cms.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -154,6 +155,25 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <!-- For generating/publishing GitHub Site Pages into /docs/ folder on master branch only -->
+      <id>github.pages</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>${maven.plugin.site.version}</version>
+            <configuration>
+              <outputDirectory>docs</outputDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
 

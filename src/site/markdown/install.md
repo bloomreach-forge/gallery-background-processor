@@ -38,7 +38,7 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 ### Dependency Management 
 Add this property to the properties section of the root pom.xml:
 
-    <hippo.forge.gallery-background.version>version.number</hippo.forge.gallery-background.version>
+    <hippo.forge.gallery-background-processor.version>version.number</hippo.forge.gallery-background-processor.version>
 
 Select the correct version for your project. See the [release notes](release-notes.html) for more information on which 
 version is applicable.
@@ -47,9 +47,9 @@ Add this dependency to the `<dependencyManagement>` section of the root pom.xml:
 
 ```
 <dependency>
-  <groupId>org.onehippo.forge.gallery-background</groupId>
-  <artifactId>hippo-gallery-background-plugin</artifactId>
-  <version>${hippo.forge.gallery-background.version}</version>
+  <groupId>org.onehippo.forge.gallery-background-processor</groupId>
+  <artifactId>gallery-background-processor</artifactId>
+  <version>${hippo.forge.gallery-background-processor.version}</version>
 </dependency>
 ```
 ### Installation in the CMS application
@@ -57,8 +57,8 @@ Add the following dependency to `cms/pom.xml`.
  
 ``` 
 <dependency>
-  <groupId>org.onehippo.forge.gallery-background</groupId>
-  <artifactId>hippo-gallery-background-plugin</artifactId>
+  <groupId>org.onehippo.forge.gallery-background-processor</groupId>
+  <artifactId>gallery-background-processor</artifactId>
 </dependency>
 ```
 
