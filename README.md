@@ -1,4 +1,8 @@
+[![Build Status](https://travis-ci.org/onehippo-forge/gallery-background-processor.svg?branch=develop)](https://travis-ci.org/onehippo-forge/gallery-background-processor)
+
 # Gallery Background Processor Plugin
+
+Have image variants created in a background process.
 
 The Gallery Background Processor plugin will move the creation process of image variants from inside the upload request 
 to a background process. This can be useful when an image set has many configured variants.
