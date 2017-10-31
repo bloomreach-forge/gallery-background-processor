@@ -10,7 +10,7 @@ directly and posts an event to a repository module, that will create the other v
 The open source code is on GitHub at [github.com/onehippo-forge/gallery-background](https://github.com/onehippo-forge/gallery-background)  
 
 ## Contents
-- [Installation instructions](install.html)
+- [Installation](installation.html)
 - [Configuration](configuration.html)
 - [Release Notes](release-notes.html)
 
