@@ -24,6 +24,6 @@
 
 ### 1.0.0  
 
-<p class="smallinfo">Release date: d MMMM 2017</p>
+<p class="smallinfo">Release date: 1 November 2017</p>
 
 + Initial release
