@@ -21,7 +21,7 @@ At the node ``/hippo:configuration/hippo:frontend/cms/cms-services/galleryProces
 + ``plugin.class = org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin``
 
 
-If needed change the module configuration. At node ``/hippo:configuration/hippo:modules/gallery-background/hippo:moduleconfig`` set:
+If needed change the module configuration. At node ``/hippo:configuration/hippo:modules/gallery-background-processor/hippo:moduleconfig`` set:
 
-+ ``maxRetry`` (default 5): number of retries to recreate an variant in case original image was not available yet
-+ ``delay`` (default 1000): initial delay in milliseconds, which is used to calculate retry, exponential backoff time
++ ``maxRetry`` (default 5): number of retries to recreate an image variant in case the original image was not available yet
++ ``delay`` (default 1000): initial delay in milliseconds, which is used to calculate an exponential waiting time before retrying to create an image variant
