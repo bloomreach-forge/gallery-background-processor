@@ -23,7 +23,7 @@ In the main pom.xml of the project, in the repositories section, add this reposi
 ```
 <repository>
   <id>hippo-forge</id>
-  <name>Hippo Forge maven 2 repository.</name>
+  <name>Bloomreach Forge maven 2 repository.</name>
   <url>https://maven.onehippo.com/maven2-forge/</url>
   <snapshots>
     <enabled>false</enabled>

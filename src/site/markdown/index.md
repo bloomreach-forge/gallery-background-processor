@@ -7,7 +7,7 @@ The plugin provides an alternative gallery processor class that only creates the
 directly and posts an event to a repository module, that will create the other variants in the background.   
 
 ## Code on GitHub
-The open source code is on GitHub at [github.com/onehippo-forge/gallery-background-processor](https://github.com/onehippo-forge/gallery-background-processor/)  
+The open source code is on GitHub at [github.com/bloomreach-forge/gallery-background-processor](https://github.com/bloomreach-forge/gallery-background-processor/)  
 
 ## Contents
 - [Installation](installation.html)
