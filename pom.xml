@@ -44,9 +44,9 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:onehippo-forge/gallery-background-processor.git</connection>
-    <developerConnection>scm:git:git@github.com:onehippo-forge/gallery-background-processor.git</developerConnection>
-    <url>https://github.com/onehippo-forge/gallery-background-processor.git</url>
+    <connection>scm:git:git@github.com:bloomreach-forge/gallery-background-processor.git</connection>
+    <developerConnection>scm:git:git@github.com:bloomreach-forge/gallery-background-processor.git</developerConnection>
+    <url>https://github.com/bloomreach-forge/gallery-background-processor.git</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -117,7 +117,7 @@
     </repository>
     <repository>
       <id>hippo-forge</id>
-      <name>Hippo Forge maven 2 repository.</name>
+      <name>Bloomreach Forge maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2-forge/</url>
       <snapshots>
         <enabled>false</enabled>
