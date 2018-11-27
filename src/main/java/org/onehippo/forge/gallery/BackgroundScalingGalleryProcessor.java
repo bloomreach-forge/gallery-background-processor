@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 BloomReach Inc (https://www.bloomreach.com)
+ * Copyright 2017-2018 BloomReach Inc (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.onehippo.forge.gallery;
 
-import org.apache.commons.io.IOUtils;
-import org.hippoecm.editor.type.PlainJcrTypeStore;
-import org.hippoecm.frontend.editor.plugins.resource.ResourceHelper;
-import org.hippoecm.frontend.model.ocm.IStore;
-import org.hippoecm.frontend.model.ocm.StoreException;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ImageBinary;
 import org.hippoecm.frontend.plugins.gallery.imageutil.ScalingParameters;
 import org.hippoecm.frontend.plugins.gallery.model.GalleryException;
@@ -28,17 +22,16 @@ import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessor;
 import org.hippoecm.frontend.session.UserSession;
 import org.hippoecm.frontend.types.IFieldDescriptor;
 import org.hippoecm.frontend.types.ITypeDescriptor;
-import org.hippoecm.repository.api.HippoNodeType;
 import org.hippoecm.repository.gallery.HippoGalleryNodeType;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.cms7.services.eventbus.HippoEventBus;
-import org.onehippo.repository.util.JcrConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import java.io.InputStream;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,88 +50,52 @@ public class BackgroundScalingGalleryProcessor extends ScalingGalleryProcessor {
         return super.addScalingParameters(nodeName, parameters);
     }
 
-    /**
-     * Overridden from org.hippoecm.frontend.plugins.gallery.processor.AbstractGalleryProcessor
-     * See the #customization# markers.
-     */
     @Override
-    public void makeImage(Node node, InputStream stream, String mimeType, String fileName) throws GalleryException,
-            RepositoryException {
-        long time = System.currentTimeMillis();
+    protected void initGalleryResourceVariants(final Node node, final ImageBinary image, final ITypeDescriptor type,
+                                               final Calendar lastModified) throws RepositoryException, GalleryException {
 
-        Node resourceNode = getPrimaryChild(node);
-        if (!resourceNode.isNodeType(HippoNodeType.NT_RESOURCE)) {
-            throw new GalleryException("Resource nodePath not of primaryType " + HippoNodeType.NT_RESOURCE);
+        final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
+        if (eventBus == null) {
+            log.warn("Hippo Event Bus not found: cannot send image variant creation event. Falling back to default behavior of {}", ScalingGalleryProcessor.class.getName());
+            super.initGalleryResourceVariants(node, image, type, lastModified);
+            return;
         }
 
-        //Create a new image binary that serves as the original source converted to RGB plus image metadata
-        ImageBinary image = new ImageBinary(node, stream, fileName, mimeType);
+        final Map<String, String> backgroundImageVariants = new HashMap<>();
 
-        log.debug("Setting JCR data of primary resource");
-        ResourceHelper.setDefaultResourceProperties(resourceNode, image.getMimeType(), image, image.getFileName());
-
-        //TODO: Currently the InputStream is never used in our impls, might revisit this piece of the API
-        InputStream isTemp = image.getStream();
-        try {
-            //store the filename in a property
-            initGalleryNode(node, isTemp, image.getMimeType(), image.getFileName());
-        } finally {
-            IOUtils.closeQuietly(isTemp);
-        }
-
-        IStore<ITypeDescriptor> store = new PlainJcrTypeStore(node.getSession());
-        ITypeDescriptor type;
-        try {
-            type = store.load(node.getPrimaryNodeType().getName());
-        } catch (StoreException e) {
-            throw new GalleryException("Could not load primary nodePath type of " + node.getName() + ", cannot create imageset variants", e);
-        }
-
-        //create the primary resource nodePath
-        log.debug("Creating primary resource {}", resourceNode.getPath());
-        Calendar lastModified = resourceNode.getProperty(JcrConstants.JCR_LAST_MODIFIED).getDate();
-        initGalleryResource(resourceNode, image.getStream(), image.getMimeType(), image.getFileName(), lastModified);
-
-        final Map<String, String> imageVariants = new HashMap<>();
-        // create all resource variant nodes
+        // create only some resource variant nodes, collect the others
         for (IFieldDescriptor field : type.getFields().values()) {
             if (field.getTypeDescriptor().isType(HippoGalleryNodeType.IMAGE)) {
-                String variantPath = field.getPath();
+                final String variantPath = field.getPath();
                 if (!node.hasNode(variantPath)) {
-                    // #customization# create original and thumbnail directly, but keep the others to be posted as event
-                    if (variantPath.equals(HippoGalleryNodeType.IMAGE_SET_ORIGINAL) || variantPath.equals(HippoGalleryNodeType.IMAGE_SET_THUMBNAIL)) {
-                        log.debug("Creating variant {}", variantPath);
+                    // create some variants directly, keep the others to be posted as event
+                    if (isBackgroundImageVariant(variantPath)) {
+                        log.debug("Scheduling variant {} for background processing", variantPath);
+                        backgroundImageVariants.put(variantPath, field.getTypeDescriptor().getType());
+                    } else {
+                        log.debug("Directly creating variant {} ", variantPath);
                         final Node variantNode = node.addNode(variantPath, field.getTypeDescriptor().getType());
                         initGalleryResource(variantNode, image.getStream(), image.getMimeType(), image.getFileName(), lastModified);
-                    } else {
-                        log.debug("Scheduling variant {} for background processing", variantPath);
-                        imageVariants.put(variantPath, field.getTypeDescriptor().getType());
                     }
                 }
             }
         }
 
-        // #customization# post the other variants to the event bus, for BackgroundGalleryProcessorModule to pick up
-        final HippoEventBus eventBus = HippoServiceRegistry.getService(HippoEventBus.class);
-        if (eventBus != null) {
-            final ImageCreationEvent variantEvent = new ImageCreationEvent(UserSession.get().getApplicationName())
-                    .nodePath(node.getPath())
-                    .mimeType(image.getMimeType())
-                    .fileName(image.getFileName())
-                    .variants(imageVariants);
-            variantEvent.sealEvent();
-            eventBus.post(variantEvent);
-        } else {
-            log.error("Hippo Event Bus not found: cannot send image variant creation event. Primary resource is {}", resourceNode.getPath());
-        }
-
-        image.dispose();
-
-        if (log.isDebugEnabled()) {
-            time = System.currentTimeMillis() - time;
-            log.debug("Processing image '{}' took {} ms.", fileName, time);
-        }
+        // post the other variants to the event bus, for BackgroundGalleryProcessorModule to pick up
+        final ImageCreationEvent variantEvent = new ImageCreationEvent(UserSession.get().getApplicationName())
+                .nodePath(node.getPath())
+                .mimeType(image.getMimeType())
+                .fileName(image.getFileName())
+                .variants(backgroundImageVariants);
+        variantEvent.sealEvent();
+        eventBus.post(variantEvent);
     }
 
-
+    /**
+     * Is a certain variant to be created now or to be created in the background?
+     */
+    protected boolean isBackgroundImageVariant(final String variantPath) {
+        // any other than original or thumbnail
+        return !(variantPath.equals(HippoGalleryNodeType.IMAGE_SET_ORIGINAL) || variantPath.equals(HippoGalleryNodeType.IMAGE_SET_THUMBNAIL));
+    }
 }

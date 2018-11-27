@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 BloomReach Inc (https://www.bloomreach.com)
+ * Copyright 2017-2018 BloomReach Inc (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessorPl
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -36,27 +35,19 @@ public class BackgroundScalingGalleryProcessorPlugin extends ScalingGalleryProce
 
     private static final Logger log = LoggerFactory.getLogger(BackgroundScalingGalleryProcessorPlugin.class);
 
-    static final String CONFIG_PARAM_WIDTH = "width";
-    static final String CONFIG_PARAM_HEIGHT = "height";
-    static final String CONFIG_PARAM_UPSCALING = "upscaling";
-    static final String CONFIG_PARAM_OPTIMIZE = "optimize";
-    static final String CONFIG_PARAM_COMPRESSION = "compression";
+    static final String CONFIG_PARAM_WIDTH = ScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH;
+    static final String CONFIG_PARAM_HEIGHT = ScalingGalleryProcessorPlugin.CONFIG_PARAM_HEIGHT;
+    static final String CONFIG_PARAM_UPSCALING = ScalingGalleryProcessorPlugin.CONFIG_PARAM_UPSCALING;
+    static final String CONFIG_PARAM_OPTIMIZE = ScalingGalleryProcessorPlugin.CONFIG_PARAM_OPTIMIZE;
+    static final String CONFIG_PARAM_COMPRESSION = ScalingGalleryProcessorPlugin.CONFIG_PARAM_COMPRESSION;
 
-    static final int DEFAULT_WIDTH = 0;
-    static final int DEFAULT_HEIGHT = 0;
-    static final boolean DEFAULT_UPSCALING = false;
-    static final String DEFAULT_OPTIMIZE = "quality";
-    static final double DEFAULT_COMPRESSION = 1.0;
+    static final int DEFAULT_WIDTH = ScalingGalleryProcessorPlugin.DEFAULT_WIDTH;
+    static final int DEFAULT_HEIGHT = ScalingGalleryProcessorPlugin.DEFAULT_HEIGHT;
+    static final boolean DEFAULT_UPSCALING = ScalingGalleryProcessorPlugin.DEFAULT_UPSCALING;
+    static final String DEFAULT_OPTIMIZE = ScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE;
+    static final double DEFAULT_COMPRESSION = ScalingGalleryProcessorPlugin.DEFAULT_COMPRESSION;
 
-    private static final Map<String, ImageUtils.ScalingStrategy> SCALING_STRATEGY_MAP = new LinkedHashMap<>();
-
-    static {
-        SCALING_STRATEGY_MAP.put("auto", ImageUtils.ScalingStrategy.AUTO);
-        SCALING_STRATEGY_MAP.put("speed", ImageUtils.ScalingStrategy.SPEED);
-        SCALING_STRATEGY_MAP.put("speed.and.quality", ImageUtils.ScalingStrategy.SPEED_AND_QUALITY);
-        SCALING_STRATEGY_MAP.put("quality", ImageUtils.ScalingStrategy.QUALITY);
-        SCALING_STRATEGY_MAP.put("best.quality", ImageUtils.ScalingStrategy.BEST_QUALITY);
-    }
+    static final Map<String, ImageUtils.ScalingStrategy> SCALING_STRATEGY_MAP = ScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP;
 
     public BackgroundScalingGalleryProcessorPlugin(final IPluginContext context, final IPluginConfig config) {
         super(context, config);
@@ -90,9 +81,5 @@ public class BackgroundScalingGalleryProcessorPlugin extends ScalingGalleryProce
         }
 
         return processor;
-    }
-
-    static Map<String, ImageUtils.ScalingStrategy> getScalingStrategyMap() {
-        return SCALING_STRATEGY_MAP;
     }
 }
