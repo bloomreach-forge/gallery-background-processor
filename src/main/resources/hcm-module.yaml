@@ -1,0 +1,5 @@
+group: 
+  name: bloomreach-forge
+  after: hippo-cms
+project: gallery-background-processor
+module: main

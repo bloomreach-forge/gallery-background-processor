@@ -1,0 +1,10 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/gallery-background-processor:
+      jcr:primaryType: hipposys:module
+      hipposys:className: org.bloomreach.forge.gallery.BackgroundGalleryProcessorModule
+      hipposys:cmsonly: true
+      /hippo:moduleconfig:
+        jcr:primaryType: hipposys:moduleconfig
+        delay: 1000
+        maxRetry: 5

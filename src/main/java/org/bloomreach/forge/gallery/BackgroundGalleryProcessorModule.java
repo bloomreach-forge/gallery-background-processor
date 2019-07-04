@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 BloomReach Inc (https://www.bloomreach.com)
+ * Copyright 2017-2019 BloomReach Inc (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,11 @@
  * limitations under the License.
  */
 
-package org.onehippo.forge.gallery;
+package org.bloomreach.forge.gallery;
 
-import org.apache.wicket.util.io.IOUtils;
-import org.hippoecm.frontend.plugins.gallery.imageutil.ImageUtils;
-import org.hippoecm.frontend.plugins.gallery.imageutil.ScalingParameters;
-import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessor;
-import org.hippoecm.repository.gallery.HippoGalleryNodeType;
-import org.hippoecm.repository.util.JcrUtils;
-import org.onehippo.cms7.services.HippoServiceRegistry;
-import org.onehippo.cms7.services.eventbus.HippoEventBus;
-import org.onehippo.cms7.services.eventbus.Subscribe;
-import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
-import org.onehippo.repository.util.JcrConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Map;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -46,7 +26,27 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin.*;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.apache.wicket.util.io.IOUtils;
+
+import org.hippoecm.frontend.plugins.gallery.imageutil.ImageUtils;
+import org.hippoecm.frontend.plugins.gallery.imageutil.ScalingParameters;
+import org.hippoecm.frontend.plugins.gallery.processor.ScalingGalleryProcessor;
+import org.hippoecm.repository.gallery.HippoGalleryNodeType;
+import org.hippoecm.repository.util.JcrUtils;
+
+import org.onehippo.cms7.services.eventbus.HippoEventListenerRegistry;
+import org.onehippo.cms7.services.eventbus.Subscribe;
+import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
+import org.onehippo.repository.util.JcrConstants;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Daemon module that listens for image creation events and creates images variants from it.
@@ -61,7 +61,6 @@ public class BackgroundGalleryProcessorModule extends AbstractReconfigurableDaem
     private static final int DEFAULT_MAX_RETRY = 5;
     private static final int DEFAULT_DELAY = 1000;
 
-    private Session session;
     private ScalingGalleryProcessor scalingProcessor;
     private int maxRetry = DEFAULT_MAX_RETRY;
     private int delay = DEFAULT_DELAY;
@@ -177,13 +176,12 @@ public class BackgroundGalleryProcessorModule extends AbstractReconfigurableDaem
 
     @Override
     protected void doInitialize(final Session session) throws RepositoryException {
-        this.session = session;
-        HippoServiceRegistry.registerService(this, HippoEventBus.class);
+        HippoEventListenerRegistry.get().register(this);
     }
 
     @Override
     protected void doShutdown() {
-        HippoServiceRegistry.unregisterService(this, HippoEventBus.class);
+        HippoEventListenerRegistry.get().unregister(this);
     }
 
     protected ScalingGalleryProcessor createScalingGalleryProcessor() throws RepositoryException {
@@ -201,17 +199,17 @@ public class BackgroundGalleryProcessorModule extends AbstractReconfigurableDaem
             final Node scaleConfig = nodes.nextNode();
 
             final String nodeName = scaleConfig.getName();
-            final int width = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH, DEFAULT_WIDTH);
-            final int height = getAsInteger(scaleConfig, CONFIG_PARAM_HEIGHT, DEFAULT_HEIGHT);
-            final boolean upscaling = JcrUtils.getBooleanProperty(scaleConfig, CONFIG_PARAM_UPSCALING, DEFAULT_UPSCALING);
-            final float compressionQuality = (float) getAsDouble(scaleConfig, CONFIG_PARAM_COMPRESSION, DEFAULT_COMPRESSION);
-            final String strategyName = JcrUtils.getStringProperty(scaleConfig, CONFIG_PARAM_OPTIMIZE, DEFAULT_OPTIMIZE);
-            final Map<String, ImageUtils.ScalingStrategy> SCALING_STRATEGY_MAP = BackgroundScalingGalleryProcessorPlugin.getScalingStrategyMap();
-            ImageUtils.ScalingStrategy strategy = SCALING_STRATEGY_MAP.get(strategyName);
+            final int width = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH, BackgroundScalingGalleryProcessorPlugin.DEFAULT_WIDTH);
+            final int height = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_HEIGHT, BackgroundScalingGalleryProcessorPlugin.DEFAULT_HEIGHT);
+            final boolean upscaling = JcrUtils.getBooleanProperty(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_UPSCALING, BackgroundScalingGalleryProcessorPlugin.DEFAULT_UPSCALING);
+            final float compressionQuality = (float) getAsDouble(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_COMPRESSION, BackgroundScalingGalleryProcessorPlugin.DEFAULT_COMPRESSION);
+            final String strategyName = JcrUtils.getStringProperty(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_OPTIMIZE, BackgroundScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE);
+
+            ImageUtils.ScalingStrategy strategy = BackgroundScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP.get(strategyName);
             if (strategy == null) {
                 log.warn("Image variant '{}' specifies an unknown scaling optimization strategy '{}'. Possible values are {}. Falling back to '{}' instead.",
-                        nodeName, strategyName, SCALING_STRATEGY_MAP.keySet(), DEFAULT_OPTIMIZE);
-                strategy = SCALING_STRATEGY_MAP.get(DEFAULT_OPTIMIZE);
+                        nodeName, strategyName, BackgroundScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP.keySet(), BackgroundScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE);
+                strategy = BackgroundScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP.get(BackgroundScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE);
             }
 
             final ScalingParameters parameters = new ScalingParameters(width, height, upscaling, strategy, compressionQuality);
