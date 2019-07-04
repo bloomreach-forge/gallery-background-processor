@@ -16,10 +16,10 @@
 
 ## Version Compatibility
 
-| Hippo CMS | Gallery Background Processor |
-| --------- |------------------------------| 
-| 13.0.0    | 2.x                          |
-| 11.2.3    | 1.x                          |
+| Bloomreach CMS | Gallery Background Processor |
+| -------------- |------------------------------| 
+| 13.0.0         | 2.x                          |
+| 11.2.3         | 1.x                          |
 
 ## Release Notes
 
