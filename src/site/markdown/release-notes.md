@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 BloomReach Inc (https://www.bloomreach.com)
+  Copyright 2017-2018 BloomReach Inc (https://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,9 +18,16 @@
 
 | Hippo CMS | Gallery Background Processor |
 | --------- |------------------------------| 
-| 11.2.3    | 1.0.x                        |
+| 13.0.0    | 2.x                          |
+| 11.2.3    | 1.x                          |
 
 ## Release Notes
+
+### 2.0.0 (Unreleased) 
+
+<p class="smallinfo">Release date: TBD</p>
+
++ Upgrade to BloomReach Experience version 13
 
 ### 1.0.0  
 
