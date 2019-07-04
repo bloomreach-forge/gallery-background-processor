@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 BloomReach Inc (https://www.bloomreach.com)
+  Copyright 2017-2019 BloomReach Inc (https://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   -->
 ## Installation
 These instructions assume a Hippo CMS project based on the Hippo website archetype, i.e. a Maven multi-module project 
-with parent pom `org.onehippo.cms7:hippo-cms7-release` and consisting of at least three sub-modules: cms, site and repository data.
+with parent pom `org.onehippo.cms7:hippo-cms7-release` and consisting of at least sub-modules /cms and /cms-dependencies.
 
 ### Forge Repository
 In the main pom.xml of the project, in the repositories section, add this repository if it is not configured there yet. 
@@ -25,20 +25,13 @@ In the main pom.xml of the project, in the repositories section, add this reposi
   <id>hippo-forge</id>
   <name>Bloomreach Forge maven 2 repository.</name>
   <url>https://maven.onehippo.com/maven2-forge/</url>
-  <snapshots>
-    <enabled>false</enabled>
-  </snapshots>
-  <releases>
-    <updatePolicy>never</updatePolicy>
-  </releases>
-  <layout>default</layout>
 </repository>
 ```
 
 ### Dependency Management 
 Add this property to the properties section of the root pom.xml:
 
-    <hippo.forge.gallery-background-processor.version>version.number</hippo.forge.gallery-background-processor.version>
+    <bloomreach.forge.gallery-background-processor.version>2.0.0</bloomreach.forge.gallery-background-processor.version>
 
 Select the correct version for your project. See the [release notes](release-notes.html) for more information on which 
 version is applicable.
@@ -47,21 +40,21 @@ Add this dependency to the `<dependencyManagement>` section of the root pom.xml:
 
 ```
 <dependency>
-  <groupId>org.onehippo.forge.gallery-background-processor</groupId>
+  <groupId>org.bloomreach.forge.gallery-background-processor</groupId>
   <artifactId>gallery-background-processor</artifactId>
-  <version>${hippo.forge.gallery-background-processor.version}</version>
+  <version>${bloomreach.forge.gallery-background-processor.version}</version>
 </dependency>
 ```
 ### Installation in the CMS application
-Add the following dependency to `cms/pom.xml`.
+Add the following dependency to `cms-dependencies/pom.xml`.
  
 ``` 
 <dependency>
-  <groupId>org.onehippo.forge.gallery-background-processor</groupId>
+  <groupId>org.bloomreach.forge.gallery-background-processor</groupId>
   <artifactId>gallery-background-processor</artifactId>
 </dependency>
 ```
 
-Rebuild your project and distribute. In case you start with an existing repository don't forget to add *-Drepo.bootstrap=true*
-to your startup options.
+Rebuild and start your project, then <a href="configuration.html">configure the BackgroundScalingGalleryProcessorPlugin</a>. 
+In case you start with an existing repository don't forget to add *-Drepo.bootstrap=true* to your startup options. 
 

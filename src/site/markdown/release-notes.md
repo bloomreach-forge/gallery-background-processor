@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017-2018 BloomReach Inc (https://www.bloomreach.com)
+  Copyright 2017-2019 BloomReach Inc (https://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@
 
 ## Release Notes
 
-### 2.0.0 (Unreleased) 
+### 2.0.0  
 
-<p class="smallinfo">Release date: TBD</p>
+<p class="smallinfo">Release date: 4 July 2019</p>
 
 + Upgrade to BloomReach Experience version 13
++ Rename artifact groupId's and Java packages from `org.onhippo` to `org.bloomreach`
 
 ### 1.0.0  
 

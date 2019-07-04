@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 BloomReach Inc (https://www.bloomreach.com)
+ * Copyright 2017-2019 BloomReach Inc (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.onehippo.forge.gallery;
+package org.bloomreach.forge.gallery;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -47,8 +47,6 @@ import org.onehippo.repository.util.JcrConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin.*;
 
 /**
  * Daemon module that listens for image creation events and creates images variants from it.
@@ -201,17 +199,17 @@ public class BackgroundGalleryProcessorModule extends AbstractReconfigurableDaem
             final Node scaleConfig = nodes.nextNode();
 
             final String nodeName = scaleConfig.getName();
-            final int width = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH, DEFAULT_WIDTH);
-            final int height = getAsInteger(scaleConfig, CONFIG_PARAM_HEIGHT, DEFAULT_HEIGHT);
-            final boolean upscaling = JcrUtils.getBooleanProperty(scaleConfig, CONFIG_PARAM_UPSCALING, DEFAULT_UPSCALING);
-            final float compressionQuality = (float) getAsDouble(scaleConfig, CONFIG_PARAM_COMPRESSION, DEFAULT_COMPRESSION);
-            final String strategyName = JcrUtils.getStringProperty(scaleConfig, CONFIG_PARAM_OPTIMIZE, DEFAULT_OPTIMIZE);
+            final int width = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_WIDTH, BackgroundScalingGalleryProcessorPlugin.DEFAULT_WIDTH);
+            final int height = getAsInteger(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_HEIGHT, BackgroundScalingGalleryProcessorPlugin.DEFAULT_HEIGHT);
+            final boolean upscaling = JcrUtils.getBooleanProperty(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_UPSCALING, BackgroundScalingGalleryProcessorPlugin.DEFAULT_UPSCALING);
+            final float compressionQuality = (float) getAsDouble(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_COMPRESSION, BackgroundScalingGalleryProcessorPlugin.DEFAULT_COMPRESSION);
+            final String strategyName = JcrUtils.getStringProperty(scaleConfig, BackgroundScalingGalleryProcessorPlugin.CONFIG_PARAM_OPTIMIZE, BackgroundScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE);
 
-            ImageUtils.ScalingStrategy strategy = SCALING_STRATEGY_MAP.get(strategyName);
+            ImageUtils.ScalingStrategy strategy = BackgroundScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP.get(strategyName);
             if (strategy == null) {
                 log.warn("Image variant '{}' specifies an unknown scaling optimization strategy '{}'. Possible values are {}. Falling back to '{}' instead.",
-                        nodeName, strategyName, SCALING_STRATEGY_MAP.keySet(), DEFAULT_OPTIMIZE);
-                strategy = SCALING_STRATEGY_MAP.get(DEFAULT_OPTIMIZE);
+                        nodeName, strategyName, BackgroundScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP.keySet(), BackgroundScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE);
+                strategy = BackgroundScalingGalleryProcessorPlugin.SCALING_STRATEGY_MAP.get(BackgroundScalingGalleryProcessorPlugin.DEFAULT_OPTIMIZE);
             }
 
             final ScalingParameters parameters = new ScalingParameters(width, height, upscaling, strategy, compressionQuality);

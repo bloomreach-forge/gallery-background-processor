@@ -2,7 +2,7 @@ definitions:
   config:
     /hippo:configuration/hippo:modules/gallery-background-processor:
       jcr:primaryType: hipposys:module
-      hipposys:className: org.onehippo.forge.gallery.BackgroundGalleryProcessorModule
+      hipposys:className: org.bloomreach.forge.gallery.BackgroundGalleryProcessorModule
       hipposys:cmsonly: true
       /hippo:moduleconfig:
         jcr:primaryType: hipposys:moduleconfig

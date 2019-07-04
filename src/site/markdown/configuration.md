@@ -1,5 +1,5 @@
 <!--
-  Copyright 2017 BloomReach Inc (https://www.bloomreach.com)
+  Copyright 2017-2019 BloomReach Inc (https://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ To enable background processing:
 
 At the node ``/hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService`` set:
 
-+ ``plugin.class = org.onehippo.forge.gallery.BackgroundScalingGalleryProcessorPlugin``
++ ``plugin.class = org.bloomreach.forge.gallery.BackgroundScalingGalleryProcessorPlugin``
 
 
 If needed change the module configuration. At node ``/hippo:configuration/hippo:modules/gallery-background-processor/hippo:moduleconfig`` set:
