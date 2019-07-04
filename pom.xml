@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2017-2018 Hippo B.V. (http://www.onehippo.com)
+  ~ Copyright 2017-2019 Hippo B.V. (http://www.onehippo.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>30-SNAPSHOT</version>
+    <version>30.0.1</version>
   </parent>
 
   <name>Gallery Background Processor Plugin</name>
@@ -31,10 +31,10 @@
   <inceptionYear>2017</inceptionYear>
 
   <properties>
-    <!-- from 13.0.0 release -->
-    <hippo.cms.version>13.0.0-SNAPSHOT</hippo.cms.version>
-    <hippo.repository.version>13.0.0-SNAPSHOT</hippo.repository.version>
-    <hippo.services.version>13.0.0-SNAPSHOT</hippo.services.version>
+    <!-- from 13.0.1 release -->
+    <hippo.cms.version>13.0.1</hippo.cms.version>
+    <hippo.repository.version>13.0.1</hippo.repository.version>
+    <hippo.services.version>13.0.1</hippo.services.version>
 
     <junit.version>4.12</junit.version>
     <commons-io.version>2.2</commons-io.version>
